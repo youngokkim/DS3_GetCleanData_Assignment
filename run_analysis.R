@@ -21,6 +21,8 @@ do_all <- function(data_path = "UCI HAR Dataset") {
     
     #indsturcion 5
     df_tidydata <- get_newtidydata(df_meanstd)
+    # write a file
+    write.table(df_tidydata, file = "run.txt", row.names = FALSE)
     
     df_tidydata
 }
@@ -50,11 +52,7 @@ merge_datasets <- function(data_path = "UCI HAR Dataset") {
 
     # create one data set and assign it to "df_run"
     df_run <- bind_rows(df_test, df_train)
-    colnames(df_run) <-c("subject","Y",paste("V", 1:561, sep=""))
-    
-    # create a file
-    write.csv(df_run, file = "run.csv", row.names = FALSE)
-    print("Merged data saved into run.csv file")
+    colnames(df_run) <-c("Subject","Y",paste("V", 1:561, sep=""))
     
     df_run
 }
