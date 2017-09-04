@@ -2,8 +2,6 @@
 # @written by Youngok Kim, joylife052@gmail.com
 
 
-#wd <- paste(getwd(), "/DS3_GetCleanData_Assignment/", sep="")
-
 
 do_all <- function(data_path = "UCI HAR Dataset") {
     
@@ -32,7 +30,6 @@ do_all <- function(data_path = "UCI HAR Dataset") {
 ## Instruction 1. 
 ##    Merges the training and the test sets to create one data set.
 ##
-
 merge_datasets <- function(data_path = "UCI HAR Dataset") {
 
     # set data file name 
@@ -44,7 +41,7 @@ merge_datasets <- function(data_path = "UCI HAR Dataset") {
     f_ytrain <- paste(data_path,"train/y_train.txt", sep="/")
     f_strain <- paste(data_path,"train/subject_train.txt", sep="/")
     
-    # make data frame of test and train
+    # read data of test and train
     df_test <- bind_cols(read.table(f_stest), read.table(f_ytest)) %>% 
         bind_cols(read.table(f_xtest))
     df_train <- bind_cols(read.table(f_strain), read.table(f_ytrain)) %>% 
@@ -61,7 +58,6 @@ merge_datasets <- function(data_path = "UCI HAR Dataset") {
 ## Instruction 2. Extracts only the measurements on the mean and standard 
 ##    deviation for each measurement.
 ##
-
 extract_mean_std <- function(df_run, data_path = "UCI HAR Dataset") {
     
     #read "features.txt" and make features dataframe
@@ -82,7 +78,6 @@ extract_mean_std <- function(df_run, data_path = "UCI HAR Dataset") {
 ## Instruction 3.Uses descriptive activity names to name the activities
 ##      in the data set
 ##
-
 set_activity_names <- function(df, data_path = "UCI HAR Dataset") {
     
     #read "activity_labels.txt" and make features dataframe
@@ -101,19 +96,20 @@ set_activity_names <- function(df, data_path = "UCI HAR Dataset") {
 ## Instruction 4. Appropriately labels the data set with descriptive variable 
 ##      names.
 ##
-
 set_variable_names <- function(df, data_path = "UCI HAR Dataset") {
     
     #read "features.txt" and make features dataframe
     f_features <- paste(data_path,"features.txt", sep="/")
     df_features <- read.table(f_features, colClasses = "character")
     
+    #remove '(',')' and '-' characters from features
     df_features$V2 <- gsub("\\(|\\)|-", "", df_features$V2)
     
     for (i in 1 : ncol(df)) {
         if (i == 1) colnames(df)[i] <- "Subject"
         else if (i == 2) colnames(df)[i] <- "Activity"
         else {
+            # change variables from V* to features
             colnames(df)[i] <- df_features[as.numeric(gsub("V","", colnames(df)[i])), 2]
         }
     }
@@ -129,9 +125,11 @@ set_variable_names <- function(df, data_path = "UCI HAR Dataset") {
 get_newtidydata <- function (df_meanstd) {
     df_new <- data.frame()
 
-    for (i in 1:30) {
+    for (i in 1:30) { # for each subject
         df_subject <- filter(df_meanstd, Subject == i)
         df_average <- data.frame(Subject=i, Group.1=unique(df_subject$Activity))
+        
+        # get the average of features values
         k <- 3
         for(k in 3:ncol(df_meanstd)) {
             #print(paste("k:",k,sep=""))
@@ -139,10 +137,14 @@ get_newtidydata <- function (df_meanstd) {
                                 aggregate(df_subject[k], by=list(df_subject$Activity), FUN=mean),
                                 key=Group.1)
         }
+        
+        # append for each subject
         df_new <- rbind(df_new, df_average)
     }
     
+    #move "Subject" column to the front
     df_new <- df_new[,c(2,1,3:68)]
+    #change 2nd colunm name to "Activity"
     colnames(df_new)[2] <- "Activity"
     
     df_new
