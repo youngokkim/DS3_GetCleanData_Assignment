@@ -9,8 +9,6 @@ The dataset includes the following files:
 
 - 'run.txt': tidy dataset generated after R script
 
-- 'UCI HAR Dataset/*':dataset of the train and test data. For more information, please refer to 'UCI HAR Dataset/README.txt'
-
 
 How to execute R script in run_analysis.R:
 ==========================================
