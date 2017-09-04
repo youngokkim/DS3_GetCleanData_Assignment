@@ -26,4 +26,4 @@ Step4. just call a 'do_all()' function. It writes a tidy data to 'run.txt' file 
 
 Step4. You can check the new dataset.
 > dim(df_tidydata)
-[1] 180  68
+> [1] 180  68
