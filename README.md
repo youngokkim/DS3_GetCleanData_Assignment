@@ -3,7 +3,7 @@
 The dataset includes the following files:
 =========================================
 
-- 'README.txt'
+- 'README.md' : this file
 
 - 'run_analysis.R': R script for Getting and Cleaning Data Course Project
 
