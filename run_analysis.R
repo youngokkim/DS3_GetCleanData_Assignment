@@ -108,6 +108,8 @@ set_variable_names <- function(df, data_path = "UCI HAR Dataset") {
     f_features <- paste(data_path,"features.txt", sep="/")
     df_features <- read.table(f_features, colClasses = "character")
     
+    df_features$V2 <- gsub("\\(|\\)|-", "", df_features$V2)
+    
     for (i in 1 : ncol(df)) {
         if (i == 1) colnames(df)[i] <- "Subject"
         else if (i == 2) colnames(df)[i] <- "Activity"
